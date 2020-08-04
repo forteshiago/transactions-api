@@ -42,7 +42,25 @@ function findIndexAll(idTra){
     return indexTransaction;
 };
 
+function balanceCalculator(allTra){
 
+    allTra.balance.income = 0;
+    allTra.balance.outcome = 0;
+    allTra.balance.total = 0;
+
+    let allTotal = allTra.transactions.reduce((prevVal, actVal) => {
+
+        if(actVal.type == "income"){
+            allTra.balance.income += actVal.value;
+            return prevVal + actVal.value
+        } else {
+            allTra.balance.outcome += actVal.value;
+            return prevVal - actVal.value
+        }
+    }, 0);
+    
+    allTra.balance.total = allTotal;
+};
 
 // ------------------------------------------------------------------------------
 // INICIO DAS COMUNICACOES
@@ -50,20 +68,11 @@ function findIndexAll(idTra){
 // Verifica as transacoes
 app.get("/transactions", (request, response) => {
 
-    //const  {id, title, value, type} = request.query;
+    const allTransactions = baseTransactions;
 
-    const allTransactions = baseTransactions.transactions;
+    balanceCalculator(allTransactions);
 
     return response.json(allTransactions);
-});
-
-// ---------------------
-//Verifica o balanco geral
-app.get("/balance", (request, response) => {
-
-    const allBalance = baseTransactions.balance;
-
-    return response.json(allBalance);
 });
 
 // ------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 # transactions-api
------------------------------------------------------------------------------
+
 ## Basic Comunications: Node.js and ExpressJS
-### Api básica para controle de caixa
+### api básica para controle de caixa
 
 _Projeto desenvolvido para fins educacionais!_
 

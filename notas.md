@@ -43,6 +43,24 @@ transações que você cadastrou até o momento, junto com o valor de soma de
 entradas, retiradas e total de crédito. Essa rota deve retornar um objeto com
 o formato a seguir:
 
-arr[]
+{arr[]}
 
 ## 03
+
+PUT/DELETE /transactions: Devem editar ou deletar transações
+
+## 04
+
+Middlewares:
+○ Validar se o uid enviado como parâmetro de rota é válido (nas rotas
+que o recebem);
+
+○ Validar se o uid enviado como parâmetro existe dentro da aplicação
+    ■ Dica: Dentro do middleware você pode armazenar informações
+    dentro do objeto request, exemplo:
+    request.transactionIndex = transactionIndex;
+    ■ Deste modo, o valor de request.transactionIndex fica
+    disponível para utilização dentro das rotas que passarem por
+    esse middleware.
+
+○ Log de todas as requisições com o tipo e url acessada;
