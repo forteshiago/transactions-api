@@ -35,7 +35,20 @@ let baseTransactions = {
     }
 }
 // ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// Middlewares
+// ------------------------------------------------------------------------------
 
+function logRequests(request, response, next){
+
+    const {method, url} = request;
+    const logLabel = `[${method.toUpperCase()}] ${url}`;
+
+    console.time(logLabel);
+    next();
+    console.timeEnd(logLabel);
+};
+// ------------------------------------------------------------------------------
 function findIndexAll(idTra){
 
     const indexTransaction = baseTransactions.transactions.findIndex((transac) => transac.id == idTra);
@@ -64,6 +77,10 @@ function balanceCalculator(allTra){
 
 // ------------------------------------------------------------------------------
 // INICIO DAS COMUNICACOES
+// ------------------------------------------------------------------------------
+//Middleware para log de requisicoes
+app.use(logRequests);
+
 // ------------------------------------------------------------------------------
 // Verifica as transacoes
 app.get("/transactions", (request, response) => {
