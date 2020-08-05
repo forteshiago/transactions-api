@@ -1,5 +1,5 @@
 const express = require("express");
-const {uuid} = require("uuidv4");
+const {uuid, isUuid} = require("uuidv4");
 const app = express();
 
 app.use(express.json());
@@ -48,6 +48,17 @@ function logRequests(request, response, next){
     next();
     console.timeEnd(logLabel);
 };
+
+function validateTransactionId(request, response, next){
+    
+    const {id} = request.params;
+
+    if(!isUuid(id)){
+        return response.status(400).json({error: `Param sent is not a valid UUID`});
+    };
+    next();
+};
+
 // ------------------------------------------------------------------------------
 function findIndexAll(idTra){
 
@@ -61,17 +72,12 @@ function balanceCalculator(allTra){
     allTra.balance.outcome = 0;
     allTra.balance.total = 0;
 
-    let allTotal = allTra.transactions.reduce((prevVal, actVal) => {
-
-        if(actVal.type == "income"){
-            allTra.balance.income += actVal.value;
-            return prevVal + actVal.value
-        } else {
-            allTra.balance.outcome += actVal.value;
-            return prevVal - actVal.value
-        }
-    }, 0);
-    
+    let allIncome = allTra.transactions.reduce((prevVal, actVal) => actVal.type == "income" ? prevVal + actVal.value : prevVal , 0);
+    let allOutcome = allTra.transactions.reduce((prevVal, actVal) => actVal.type == "outcome" ? prevVal + actVal.value : prevVal , 0);
+    let allTotal = allTra.transactions.reduce((prevVal, actVal) => actVal.type == "income" ? (prevVal + actVal.value) : (prevVal - actVal.value) , 0);
+   
+    allTra.balance.income = allIncome;
+    allTra.balance.outcome = allOutcome;
     allTra.balance.total = allTotal;
 };
 
@@ -106,12 +112,16 @@ app.post("/transactions", (request, response) =>{
 
 // ------------------------------------------------------------------------------
 //Altera transacao
-app.put("/transactions/:id", (request, response) => {
+app.put("/transactions/:id", validateTransactionId, (request, response) => {
 
     const {id} = request.params;
     const {title, value, type} = request.body;
 
     const masterIndex = findIndexAll(id);
+
+    if(masterIndex < 0){
+        return response.status(400).json({"error delete":"Projeto nao encontrado!"});
+    };
     
     const updateTransaction = {
         id, title, value, type,
@@ -124,10 +134,14 @@ app.put("/transactions/:id", (request, response) => {
 
 // ------------------------------------------------------------------------------
 //Deleta transacao
-app.delete("/transactions/:id", (request, response) => {
+app.delete("/transactions/:id", validateTransactionId, (request, response) => {
 
     const {id} = request.params;
     const masterIndex = findIndexAll(id);
+
+    if(masterIndex < 0){
+        return response.status(400).json({"error delete":"Projeto nao encontrado!"});
+    };
     
     baseTransactions.transactions.splice(masterIndex, 1);
 
