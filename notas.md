@@ -1,7 +1,7 @@
 # Pair Programming!
 
 Eduardo Bisinella: https://github.com/dudubisinella/transactions-api-
-Emanuel Barcelos:
+Emanuel Barcelos: https://github.com/emanuelbs
 
 ------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ Emanuel Barcelos:
 
 [x] Criar a sessão do live share e começa o código, inicializa o repositório Git e dá o primeiro commit e push para o repositório remoto criado no GitHubO primeiro da dupla cria a sala no meet,
 
-[x] O segundo cria um repositório no GitHub com o nome transactions-api (não esqueça de convidar os integrantes do seu grupo para contribuir no repositório).
+[x] Criar um repositório no GitHub com o nome transactions-api (não esqueça de convidar os integrantes do seu grupo para contribuir no repositório).
 
 ------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ transações que você cadastrou até o momento, junto com o valor de soma de
 entradas, retiradas e total de crédito. Essa rota deve retornar um objeto com
 o formato a seguir:
 
-{arr[]}
+{arrTransactions[]}
 
 ## 03
 
